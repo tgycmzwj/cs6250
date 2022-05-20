@@ -1,0 +1,4 @@
+switch log string, do not return a static string, build the log string
+switch log string, do not return a static string, build the log string
+switch log string, do not return a static string, build the log string
+switch log string, do not return a static string, build the log string
