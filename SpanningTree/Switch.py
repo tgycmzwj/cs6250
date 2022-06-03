@@ -36,7 +36,7 @@ class Switch(StpSwitch):
         # TODO: Define a data structure to keep track of which links are part of / not part of the spanning tree.
         self.root = self.switchID
         self.distance = 0
-        self.activeLinks = []
+        self.activeLinks = set()
         self.switchThrough = self.switchID
 
     def send_initial_messages(self):
@@ -54,8 +54,8 @@ class Switch(StpSwitch):
         # TODO: This function needs to accept an incoming message and process it accordingly.
         #      This function is called every time the switch receives a new message.
         # add to active link
-        if message.pathThrough and message.origin not in self.activeLinks:
-            self.activeLinks.append(message.origin)
+        if message.pathThrough:
+            self.activeLinks.add(message.origin)
         # remove from active link
         if message.pathThrough==False and message.origin!=self.switchThrough and message.origin in self.activeLinks:
             self.activeLinks.remove(message.origin)
@@ -69,8 +69,7 @@ class Switch(StpSwitch):
             # update the switchThrough
             self.switchThrough=message.origin
             # update the activeLinks
-            if message.origin not in self.activeLinks:
-                self.activeLinks.append(message.origin)
+            self.activeLinks.add(message.origin)
             # update neighbors with new message
             for link in self.links:
                 msg=Message(self.root,self.distance,self.switchID,link,self.switchThrough==link)
@@ -84,8 +83,7 @@ class Switch(StpSwitch):
             # update the switchThrough
             self.switchThrough=message.origin
             # update the activeLinks
-            if message.origin not in self.activeLinks:
-                self.activeLinks.append(message.origin)
+            self.activeLinks.add(message.origin)
             # update neighbors with new message
             for link in self.links:
                 msg=Message(self.root,self.distance,self.switchID,link,self.switchThrough==link)
@@ -97,8 +95,7 @@ class Switch(StpSwitch):
             # update the switchThrough
             self.switchThrough=message.origin
             # update the activeLinks
-            if message.origin not in self.activeLinks:
-                self.activeLinks.append(message.origin)
+            self.activeLinks.add(message.origin)
             # update neighbors with new message
             for link in self.links:
                 msg=Message(self.root,self.distance,self.switchID,link,self.switchThrough==link)
@@ -117,7 +114,7 @@ class Switch(StpSwitch):
         #      for switch 2 would have the following text:
         #      2 - 1, 2 - 3
         #      A full example of a valid output file is included (sample_output.txt) with the project skeleton.
-        all_active_links = sorted(self.activeLinks)
+        all_active_links = sorted(list(self.activeLinks))
         output_results=[]
         for link in all_active_links:
             output_results.append(str(self.switchID)+' - '+str(link))
