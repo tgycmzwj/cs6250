@@ -1,0 +1,49 @@
+# CS 6250 Spring 2021 - SDN Firewall Project with POX
+# build leucosia-v20
+#
+# This file contains the rules for the firewall as specified in the Project Documentation.  
+#
+# Rule Format:
+# RuleNumber,Action,Source MAC,Destination MAC,Source IP,Destination IP,Protocol,Source Port,Destination Port,Comment/Note
+# RuleNumber = this is a rule number to help you track a particular rule - it is not used in the firewall implementation
+# Action = Block or Allow , Allow Rules need to take precedence over Block Rules
+# Source / Destination MAC address in form of xx:xx:xx:xx:xx:xx
+# Source / Destination IP Address in form of xxx.xxx.xxx.xxx/xx in CIDR notation
+# Protocol = integer IP protocol number per IANA (0-254)
+# Source / Destination Port = if Protocol is TCP or UDP, this is the Application Port Number per IANA
+# Comment/Note = this is for your use in tracking rules.
+#
+# Any field not being used for a match should have a '-' character as it's entry (except for RuleNumber/Comment)
+# Do not pad any of the entries (i.e., have a rule like:  1, Block, -, -,...)
+#
+# Warning:  For the IP address, you need to specify an appropriate network address
+# that matches the subnet mask you are using.  For instance, if you want to use a /16
+# subnet mask, then the IP address must be x.x.0.0.  For example, a proper address to 
+# reference a 192.168.10.x/24 network would be 192.168.10.0/24.  A single host
+# is addressed as a single IP address with a /32.
+#
+# Example Rules:
+#1,Block,-,-,10.0.0.1/32,10.0.1.0/24,6,-,80,Block host 10.0.0.1 from accessing a web server on the 10.0.1.0/24 network
+#2,Allow,-,-,10.0.0.1/32,10.0.1.125/32,6,-,80,Allow 10.0.0.1 to access a web server on 10.0.1.125 overriding previous rule
+
+
+# block connection from US to UK
+# this rule is intentionally placed at the end
+
+# allow restricted connection from ATL to LDN
+2,Allow,-,-,10.0.1.1/32,10.0.2.1/32,17,-,10,allow ATL to LDN with UDP at port 10
+2,Allow,-,-,10.0.1.1/32,10.0.2.1/32,6,-,30,allow ATL to LDN with TCP from port 60 at ATL
+2,Allow,-,-,10.0.1.1/32,10.0.2.1/32,6,20,40,allow ATL to LDN with TCP from port 20 to port 40
+
+# allow connection from DAL to MCR through TCP dst port 4, 5, 6 and 7
+# use DAL MAC and MCR IP
+3,Allow,00:00:00:00:01:1e,-,-,10.0.2.2/32,6,-,4,allow connection from DAL to MCR
+# use DAL IP and MCR IP
+3,Allow,-,-,10.0.1.2/32,10.0.2.2/32,6,-,5,allow connection from DAL to MCR
+# use DAL IP and MCR MAC
+3,Allow,-,00:00:00:02:01:1e,10.0.1.2/32,-,6,-,6,allow connection from DAL to MCR
+# use DAL MAC and MCR MAC
+3,Allow,00:00:00:00:01:1e,00:00:00:02:01:1e,-,-,6,-,7,allow connection from DAL to MCR
+
+# block connection from US to UK
+1,Block,-,-,10.0.1.0/24,10.0.2.0/24,-,-,-,block subnets

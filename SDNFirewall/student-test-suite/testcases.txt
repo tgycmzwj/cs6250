@@ -1,0 +1,148 @@
+# each testcase should follow
+# client, host, protocol, port, should connected?
+
+# Task 1 DNS Testing hq2 blocking
+
+other1 hq2 U 53 False
+other2 hq2 U 53 False
+hq1 hq2 U 53 True
+us3 hq2 U 53 True
+uk2 hq2 U 53 True
+in5 hq2 U 53 True
+cn4 hq2 U 53 True
+
+
+# Task 1 DNS Testing hq1 allow
+
+other1 hq1 U 53 True
+other2 hq1 U 53 True
+hq3 hq1 U 53 True
+us3 hq1 U 53 True
+uk2 hq1 U 53 True
+in5 hq1 U 53 True
+cn4 hq1 U 53 True
+
+# Task 1 DNS-over-TLS Testing hq2 blocking
+
+other1 hq2 U 853 False
+other2 hq2 U 853 False
+hq1 hq2 U 853 True
+us4 hq2 U 853 True
+uk3 hq2 U 853 True
+in2 hq2 U 853 True
+cn1 hq2 U 853 True
+
+
+# Task 1 DNS-over-TLS Testing hq1 allow
+
+other1 hq1 U 853 True
+other2 hq1 U 853 True
+hq4 hq1 U 853 True
+us4 hq1 U 853 True
+uk3 hq1 U 853 True
+in2 hq1 U 853 True
+cn1 hq1 U 853 True
+
+
+# Task 2 OpenVPN
+
+other1 hq3 T 1194 False
+other1 hq3 U 1194 False
+other2 hq3 U 1194 False
+other1 hq4 T 1194 True
+hq1 hq3 T 1194 False
+us3 hq3 T 1194 True
+uk3 hq3 T 1194 True
+in3 hq3 T 1194 True
+cn3 hq3 T 1194 True
+us1 hq3 T 1194 False
+uk2 hq3 T 1194 False
+in4 hq3 T 1194 False
+cn5 hq3 T 1194 False
+hq1 hq3 U 1194 False
+us3 hq3 U 1194 True
+uk3 hq3 U 1194 True
+in3 hq3 U 1194 True
+cn3 hq3 U 1194 True
+us1 hq3 U 1194 False
+uk2 hq3 U 1194 False
+in4 hq3 U 1194 False
+cn5 hq3 U 1194 False
+us4 hq2 T 1194 True
+cn2 hq4 U 1194 True
+
+
+# use P to indicate ping, leave port as '-'
+
+# Task 3 Ping
+other1 hq1 P - True
+other2 hq5 P - True
+other1 us1 P - False
+other2 us5 P - False
+other2 uk2 P - False
+other1 in5 P - False
+other1 cn2 P - False
+us1 hq1 P - True
+cn2 hq2 P - True
+in4 hq4 P - True
+uk1 hq5 P - True
+uk1 us1 P - False
+hq1 other1 P - True
+hq5 other2 P - True
+
+#Task 4 Remote Desktop
+
+other1 hq1 T 3389 False
+other2 us1 T 3389 False
+other1 in1 T 3389 False
+other2 cn3 T 3389 False
+other2 uk3 T 3389 False
+other1 hq1 T 5900 False
+other2 us1 T 5900 False
+other1 in1 T 5900 False
+other2 cn3 T 5900 False
+other2 uk3 T 5900 False
+uk1 hq1 T 3389 True
+us1 hq4 T 3389 True
+in3 hq3 T 3389 True
+cn2 hq2 T 3389 True
+uk2 hq1 T 5900 True
+us3 hq4 T 5900 True
+in4 hq1 T 5900 True
+cn3 hq4 T 5900 True
+
+#Task 5
+
+other1 us3 T 8510 True
+hq1 us3 T 8510 True
+other2 us4 T 8510 True
+uk1 us4 T 8510 True
+uk2 us3 T 8510 False
+uk3 us3 T 8510 False
+uk4 us3 T 8510 False
+uk5 us3 T 8510 False
+in4 us3 T 8510 False
+in5 us3 T 8510 False
+us5 us3 T 8510 False
+hq5 us3 T 8510 False
+other1 us3 U 8510 True
+hq1 us3 U 8510 True
+other2 us4 U 8510 True
+uk1 us4 U 8510 True
+uk3 us3 U 8510 True
+uk4 us3 U 8510 True
+uk5 us3 U 8510 True
+in4 us3 U 8510 True
+in5 us3 U 8510 True
+us5 us3 U 8510 True
+hq5 us3 U 8510 True
+uk3 us3 T 8500 True
+uk3 us3 U 8500 True
+
+
+#Task 6
+
+other1 hq1 G 80 False
+other1 hq1 G 20 False
+other1 hq1 T 1723 True
+us1 us2 T 1723 True

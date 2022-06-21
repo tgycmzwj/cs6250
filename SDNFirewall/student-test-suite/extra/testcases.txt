@@ -1,0 +1,31 @@
+# each testcase should follow
+# client, host, protocol, dst_port, src_port, should connected?
+
+# block connection from the world
+# this rule is intentionally placed at the end
+
+# allow restricted connection from ATL to LDN
+
+# we need to put "atl ldn T 40 20 True" in the beginning
+# or it will fail. Don't know why.
+atl ldn T 40 20 True
+atl ldn T 40 30 False
+atl ldn U 10 - True
+atl ldn T 10 20 False
+atl ldn T 30 - True
+atl ldn T 40 - False
+
+# allow connection from DAL to MCR through TCP dst port 4, 5, 6 and 7
+
+dal mcr T 4 - True
+dal mcr T 5 - True
+dal mcr T 6 - True
+dal mcr T 7 - True
+dal mcr T 8 - False
+dal mcr T 4 80 True
+dal mcr U 10 - False
+
+# block connection from US to UK
+
+dal ldn T 0 - False
+dal ldn U 0 - False
