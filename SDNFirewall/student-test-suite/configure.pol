@@ -1,0 +1,134 @@
+# CS 6250 Summer 2022 - SDN Firewall Project with POX
+# build ledger-99
+#
+# This file contains the rules for the firewall as specified in the Project Documentation.  
+#
+# Rule Format:
+# RuleNumber,Action,Source MAC,Destination MAC,Source IP,Destination IP,Protocol,Source Port,Destination Port,Comment/Note
+# RuleNumber = this is a rule number to help you track a particular rule - it is not used in the firewall implementation
+# Action = Block or Allow , Allow Rules need to take precedence over Block Rules
+# Source / Destination MAC address in form of xx:xx:xx:xx:xx:xx
+# Source / Destination IP Address in form of xxx.xxx.xxx.xxx/xx in CIDR notation
+# Protocol = integer IP protocol number per IANA (0-254)
+# Source / Destination Port = if Protocol is TCP or UDP, this is the Application Port Number per IANA
+# Comment/Note = this is for your use in tracking rules.
+#
+# Any field not being used for a match should have a '-' character as it's entry (except for RuleNumber/Comment)
+# Do not pad any of the entries (i.e., have a rule like:  1, Block, -, -,...)
+#
+# Warning:  For the IP address, you need to specify an appropriate network address
+# that matches the subnet mask you are using.  For instance, if you want to use a /16
+# subnet mask, then the IP address must be x.x.0.0.  For example, a proper address to 
+# reference a 192.168.10.x/24 network would be 192.168.10.0/24.  A single host
+# is addressed as a single IP address with a /32.  In other words, the host bit for a 
+# subnet other than /32 must be 0.
+#
+# Example Rules:
+# 1,Block,-,-,10.0.0.1/32,10.0.1.0/24,6,-,80,Block 10.0.0.1 from accessing a web server on the 10.0.1.0/24 network
+# 2,Allow,-,-,10.0.0.1/32,10.0.1.125/32,6,-,80,Allow 10.0.0.1 to access a web server on 10.0.1.125 overriding previous rule
+# hq---10.0.0.0/24; cn---10.0.30.0/24; in---10.0.20.0/24; uk---10.0.40.0/24; us---10.0.1.0/24
+# protocol: TCP---6; UDP---17; ICMP---1
+# RuleNumber,Action,SourceMAC,DestMAC,SourceIP,DestIP,Protocol,SourcePort,DestPort,Comment
+# Task 1
+# hq1---10.0.0.1; hq2---10.0.0.2
+1.101,Allow,-,-,-,10.0.0.1/32,17,-,53,Allow world to access UDP DNS on hq1
+1.102,Allow,-,-,-,10.0.0.1/32,17,-,853,Allow world to access UDP DNS-TLS on hq1
+1.201,Block,-,-,-,10.0.0.2/32,17,-,53,Block world to access UDP DNS on hq2
+1.202,Allow,-,-,10.0.0.0/24,10.0.0.2/32,17,-,53,Allow hq to access UDP DNS on hq2
+1.203,Allow,-,-,10.0.1.0/24,10.0.0.2/32,17,-,53,Allow us to access UDP DNS on hq2
+1.204,Allow,-,-,10.0.20.0/24,10.0.0.2/32,17,-,53,Allow in to access UDP DNS on hq2
+1.205,Allow,-,-,10.0.30.0/24,10.0.0.2/32,17,-,53,Allow cn to access UDP DNS on hq2
+1.206,Allow,-,-,10.0.40.0/24,10.0.0.2/32,17,-,53,Allow uk to access UDP DNS on hq2
+1.301,Block,-,-,-,10.0.0.2/32,17,-,853,Block world to access UDP DNS-TLS on hq2
+1.302,Allow,-,-,10.0.0.0/24,10.0.0.2/32,17,-,853,Allow hq to access UDP DNS-TLS on hq2
+1.303,Allow,-,-,10.0.1.0/24,10.0.0.2/32,17,-,853,Allow us to access UDP DNS-TLS on hq2
+1.304,Allow,-,-,10.0.20.0/24,10.0.0.2/32,17,-,853,Allow in to access UDP DNS-TLS on hq2
+1.305,Allow,-,-,10.0.30.0/24,10.0.0.2/32,17,-,853,Allow cn to access UDP DNS-TLS on hq2
+1.306,Allow,-,-,10.0.40.0/24,10.0.0.2/32,17,-,853,Allow uk to access UDP DNS-TLS on hq2
+
+# Task 2
+#hq3---10.0.0.60; us3---10.0.1.33; uk3---10.0.40.129; in3---10.0.20.3; cn3---10.0.30.3
+2.101,Block,-,-,-,10.0.0.60/32,6,-,1194,Block world to access TCP on hq3
+2.102,Allow,-,-,10.0.1.33/32,10.0.0.60/32,6,-,1194,Allow us3 to access TCP on hq3
+2.103,Allow,-,-,10.0.40.129/32,10.0.0.60/32,6,-,1194,Allow uk3 to access TCP on hq3
+2.104,Allow,-,-,10.0.20.3/32,10.0.0.60/32,6,-,1194,Allow in3 to access TCP on hq3
+2.105,Allow,-,-,10.0.30.3/32,10.0.0.60/32,6,-,1194,Allow cn3 to access TCP on hq3
+2.201,Block,-,-,-,10.0.0.60/32,17,-,1194,Block world to access UDP on hq3
+2.202,Allow,-,-,10.0.1.33/32,10.0.0.60/32,17,-,1194,Allow us3 to access UDP on hq3
+2.203,Allow,-,-,10.0.40.129/32,10.0.0.60/32,17,-,1194,Allow uk3 to access UDP on hq3
+2.204,Allow,-,-,10.0.20.3/32,10.0.0.60/32,17,-,1194,Allow in3 to access UDP on hq3
+2.205,Allow,-,-,10.0.30.3/32,10.0.0.60/32,17,-,1194,Allow cn3 to access UDP on hq3
+
+# Task 3
+3.101,Allow,-,-,-,10.0.0.0/24,1,-,-,Allow world to access ICMP ping on hq
+3.201,Block,-,-,-,10.0.1.0/24,1,-,-,Block world to access ICMP ping on us
+3.202,Block,-,-,-,10.0.20.0/24,1,-,-,Block world to access ICMP ping on in
+3.203,Block,-,-,-,10.0.30.0/24,1,-,-,Block world to access ICMP ping on cn
+3.204,Block,-,-,-,10.0.40.0/24,1,-,-,Block world to access ICMP ping on uk
+3.301,Allow,-,-,10.0.0.0/24,10.0.1.0/24,1,-,-,Allow hq to access ICMP ping on us
+3.302,Allow,-,-,10.0.0.0/24,10.0.20.0/24,1,-,-,Allow hq to access ICMP ping on in
+3.303,Allow,-,-,10.0.0.0/24,10.0.30.0/24,1,-,-,Allow hq to access ICMP ping on cn
+3.304,Allow,-,-,10.0.0.0/24,10.0.40.0/24,1,-,-,Allow hq to access ICMP ping on uk
+
+# Task 4
+4.101,Block,-,-,-,10.0.0.0/24,6,-,3389,Block world to access TCP-3389/Remote Desktop on hq
+4.102,Block,-,-,-,10.0.1.0/24,6,-,3389,Block world to access TCP-3389/Remote Desktop on us
+4.103,Block,-,-,-,10.0.20.0/24,6,-,3389,Block world to access TCP-3389/Remote Desktop on in
+4.104,Block,-,-,-,10.0.30.0/24,6,-,3389,Block world to access TCP-3389/Remote Desktop on cn
+4.105,Block,-,-,-,10.0.40.0/24,6,-,3389,Block world to access TCP-3389/Remote Desktop on uk
+4.106,Allow,-,-,10.0.1.0/24,10.0.0.0/24,6,-,3389,Allow us to access TCP-3389/Remote Desktop on hq
+4.107,Allow,-,-,10.0.20.0/24,10.0.0.0/24,6,-,3389,Allow in to access TCP-3389/Remote Desktop on hq
+4.108,Allow,-,-,10.0.30.0/24,10.0.0.0/24,6,-,3389,Allow cn to access TCP-3389/Remote Desktop on hq
+4.109,Allow,-,-,10.0.40.0/24,10.0.0.0/24,6,-,3389,Allow uk to access TCP-3389/Remote Desktop on hq
+4.201,Block,-,-,-,10.0.0.0/24,6,-,5900,Block world to access TCP-5900/VNC on hq
+4.202,Block,-,-,-,10.0.1.0/24,6,-,5900,Block world to access TCP-5900/VNC on us
+4.203,Block,-,-,-,10.0.20.0/24,6,-,5900,Block world to access TCP-5900/VNC on in
+4.204,Block,-,-,-,10.0.30.0/24,6,-,5900,Block world to access TCP-5900/VNC on cn
+4.205,Block,-,-,-,10.0.40.0/24,6,-,5900,Block world to access TCP-5900/VNC on uk
+4.206,Allow,-,-,10.0.1.0/24,10.0.0.0/24,6,-,5900,Allow us to access TCP-5900/Remote Desktop on hq
+4.207,Allow,-,-,10.0.20.0/24,10.0.0.0/24,6,-,5900,Allow in to access TCP-5900/Remote Desktop on hq
+4.208,Allow,-,-,10.0.30.0/24,10.0.0.0/24,6,-,5900,Allow cn to access TCP-5900/Remote Desktop on hq
+4.209,Allow,-,-,10.0.40.0/24,10.0.0.0/24,6,-,5900,Allow uk to access TCP-5900/Remote Desktop on hq
+
+# Task 5
+5.101,Block,-,-,10.0.40.128/32,10.0.1.33/32,6,-,8510,Block uk2 to access TCP-8510/microweb on us3
+5.102,Block,-,-,10.0.40.129/32,10.0.1.33/32,6,-,8510,Block uk3 to access TCP-8510/microweb on us3
+5.103,Block,-,-,10.0.40.130/32,10.0.1.33/32,6,-,8510,Block uk4 to access TCP-8510/microweb on us3
+5.104,Block,-,-,10.0.40.131/32,10.0.1.33/32,6,-,8510,Block uk5 to access TCP-8510/microweb on us3
+5.105,Block,-,-,10.0.20.126/32,10.0.1.33/32,6,-,8510,Block in4 to access TCP-8510/microweb on us3
+5.106,Block,-,-,10.0.20.125/32,10.0.1.33/32,6,-,8510,Block in5 to access TCP-8510/microweb on us3
+5.107,Block,-,-,10.0.1.125/32,10.0.1.33/32,6,-,8510,Block us5 to access TCP-8510/microweb on us3
+5.108,Block,-,-,10.0.0.220/32,10.0.1.33/32,6,-,8510,Block hq5 to access TCP-8510/microweb on us3
+5.201,Block,-,-,10.0.40.128/32,10.0.1.34/32,6,-,8510,Block uk2 to access TCP-8510/microweb on us4
+5.202,Block,-,-,10.0.40.129/32,10.0.1.34/32,6,-,8510,Block uk3 to access TCP-8510/microweb on us4
+5.203,Block,-,-,10.0.40.130/32,10.0.1.34/32,6,-,8510,Block uk4 to access TCP-8510/microweb on us4
+5.204,Block,-,-,10.0.40.131/32,10.0.1.34/32,6,-,8510,Block uk5 to access TCP-8510/microweb on us4
+5.205,Block,-,-,10.0.20.126/32,10.0.1.34/32,6,-,8510,Block in4 to access TCP-8510/microweb on us4
+5.206,Block,-,-,10.0.20.125/32,10.0.1.34/32,6,-,8510,Block in5 to access TCP-8510/microweb on us4
+5.207,Block,-,-,10.0.1.125/32,10.0.1.34/32,6,-,8510,Block us5 to access TCP-8510/microweb on us4
+5.208,Block,-,-,10.0.0.220/32,10.0.1.34/32,6,-,8510,Block hq5 to access TCP-8510/microweb on us4
+
+# Task 6
+6.101,Block,-,-,-,10.0.0.0/24,47,-,-,Block world to access GRE on hq
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
